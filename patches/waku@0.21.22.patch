@@ -1,0 +1,16 @@
+diff --git a/dist/lib/middleware/handler.js b/dist/lib/middleware/handler.js
+index 0a4bcd802ba3e06ac87e66ef0a3c52350f7a2eba..68f608a109a2d41ce6c132c7d4fe427143da9c6c 100644
+--- a/dist/lib/middleware/handler.js
++++ b/dist/lib/middleware/handler.js
+@@ -123,6 +123,11 @@ export const handler = (options)=>{
+                 res = await entries.default.handleRequest(input, utils);
+             } catch (e) {
+                 const info = getErrorInfo(e);
++                if (!info?.status) {
++                  // we should either allow devs to register an error handler
++                  // or let these pass through
++                  throw e;
++                }
+                 if (info?.status !== 404) {
+                     ctx.res.status = info?.status || 500;
+                     ctx.res.body = stringToStream(e?.message || String(e));
